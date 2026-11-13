@@ -1,0 +1,173 @@
+package forms;
+
+import com.unify.nxj.mgr.datatypes.NullableString;
+import cliente.ValidadorCep;
+import cliente.ValidadorDocumento;
+import cliente.ValidadorEmail;
+import cliente.ValidadorNome;
+import cliente.ValidadorSituacao;
+import cliente.ValidadorTelefone;
+import cliente.ValidadorTipoPessoa;
+import cliente.ValidadorUf;
+
+FORM CadastroCliente
+{
+    FIELD nome
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorNome.validar(texto(nome), texto(tipo_pessoa)))) rejectOperation();
+        }
+    }
+
+    FIELD tipo_pessoa
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorTipoPessoa.validar(texto(tipo_pessoa)))) {
+                rejectOperation();
+                return;
+            }
+            if (invalido(ValidadorNome.revisar(texto(nome), texto(tipo_pessoa)))) {
+                session.queueNextField(nome);
+                return;
+            }
+            if (invalido(ValidadorDocumento.revisar(texto(tipo_pessoa), texto(cpf_cnpj)))) {
+                session.queueNextField(cpf_cnpj);
+            }
+        }
+    }
+
+    FIELD cpf_cnpj
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorDocumento.validar(texto(tipo_pessoa), texto(cpf_cnpj)))) rejectOperation();
+        }
+    }
+
+    FIELD situacao
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorSituacao.validar(texto(situacao)))) rejectOperation();
+        }
+    }
+
+    FIELD telefone
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorTelefone.validar(texto(telefone)))) {
+                rejectOperation();
+                return;
+            }
+            if (invalido(ValidadorTelefone.compativelComUf(texto(telefone), texto(estado)))) rejectOperation();
+        }
+    }
+
+    FIELD email
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorEmail.validar(texto(email)))) rejectOperation();
+        }
+    }
+
+    FIELD cep
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorCep.validar(texto(cep)))) {
+                rejectOperation();
+                return;
+            }
+            if (invalido(ValidadorCep.compativelComUf(texto(cep), texto(estado)))) rejectOperation();
+        }
+    }
+
+    FIELD estado
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorUf.validar(texto(estado)))) {
+                rejectOperation();
+                return;
+            }
+            if (invalido(ValidadorCep.compativelComUf(texto(cep), texto(estado)))) {
+                session.queueNextField(cep);
+                return;
+            }
+            if (invalido(ValidadorTelefone.compativelComUf(texto(telefone), texto(estado)))) {
+                session.queueNextField(telefone);
+            }
+        }
+    }
+
+    private String texto(NullableString campo) throws Exception {
+        if (campo == null || campo.undefined || campo.isNull()) return "";
+        String valor = campo.getString();
+        if (valor == null) return "";
+        return valor.trim();
+    }
+
+    private boolean invalido(String mensagem) {
+        if (mensagem == null) return false;
+        session.displayToMessageBox(mensagem);
+        return true;
+    }
+
+    private boolean validarGravacao() throws Exception {
+        if (invalido(ValidadorTipoPessoa.validar(texto(tipo_pessoa)))) {
+            session.queueNextField(tipo_pessoa);
+            return true;
+        }
+        if (invalido(ValidadorNome.validar(texto(nome), texto(tipo_pessoa)))) {
+            session.queueNextField(nome);
+            return true;
+        }
+        if (invalido(ValidadorDocumento.validar(texto(tipo_pessoa), texto(cpf_cnpj)))) {
+            session.queueNextField(cpf_cnpj);
+            return true;
+        }
+        if (invalido(ValidadorSituacao.validar(texto(situacao)))) {
+            session.queueNextField(situacao);
+            return true;
+        }
+        if (invalido(ValidadorUf.validar(texto(estado)))) {
+            session.queueNextField(estado);
+            return true;
+        }
+        if (invalido(ValidadorCep.validar(texto(cep)))) {
+            session.queueNextField(cep);
+            return true;
+        }
+        if (invalido(ValidadorCep.compativelComUf(texto(cep), texto(estado)))) {
+            session.queueNextField(cep);
+            return true;
+        }
+        if (invalido(ValidadorTelefone.validar(texto(telefone)))) {
+            session.queueNextField(telefone);
+            return true;
+        }
+        if (invalido(ValidadorTelefone.compativelComUf(texto(telefone), texto(estado)))) {
+            session.queueNextField(telefone);
+            return true;
+        }
+        if (invalido(ValidadorEmail.validar(texto(email)))) {
+            session.queueNextField(email);
+            return true;
+        }
+        return false;
+    }
+
+    BEFORE ADD
+    {
+        if (validarGravacao()) rejectOperation();
+    }
+
+    BEFORE UPDATE
+    {
+        if (validarGravacao()) rejectOperation();
+    }
+}

@@ -1,0 +1,116 @@
+package forms;
+
+import com.unify.nxj.mgr.datatypes.NullableString;
+import atendimento.ValidadorAssunto;
+import atendimento.ValidadorClienteAtendimento;
+import atendimento.ValidadorDataAbertura;
+import atendimento.ValidadorDescricao;
+import atendimento.ValidadorSituacaoAtendimento;
+
+FORM CadastroAtendimento
+{
+    private NullableString situacaoDoCliente;
+
+    FIELD cliente_id
+    {
+        ON DATA ACCEPT
+        {
+            if (clienteInvalido()) rejectOperation();
+        }
+    }
+
+    FIELD data_abertura
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorDataAbertura.validar(texto(data_abertura)))) rejectOperation();
+        }
+    }
+
+    FIELD assunto
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorAssunto.validar(texto(assunto)))) rejectOperation();
+        }
+    }
+
+    FIELD descricao
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorDescricao.validar(texto(descricao)))) rejectOperation();
+        }
+    }
+
+    FIELD situacao
+    {
+        ON DATA ACCEPT
+        {
+            if (invalido(ValidadorSituacaoAtendimento.validar(texto(situacao)))) rejectOperation();
+        }
+    }
+
+    private String texto(NullableString campo) throws Exception {
+        if (campo == null || campo.undefined || campo.isNull()) return "";
+        String valor = campo.getString();
+        if (valor == null) return "";
+        return valor.trim();
+    }
+
+    private boolean invalido(String mensagem) {
+        if (mensagem == null) return false;
+        session.displayToMessageBox(mensagem);
+        return true;
+    }
+
+    private boolean clienteInvalido() throws Exception {
+        if (invalido(ValidadorClienteAtendimento.validarId(texto(cliente_id)))) {
+            session.queueNextField(cliente_id);
+            return true;
+        }
+        if (situacaoDoCliente == null) situacaoDoCliente = new NullableString();
+        situacaoDoCliente.setNull();
+        EXEC SQL
+        select situacao
+          from cliente
+         where id = :cliente_id
+        INTO situacaoDoCliente;
+        if (invalido(ValidadorClienteAtendimento.validarConsulta(session.status, texto(situacaoDoCliente)))) {
+            session.queueNextField(cliente_id);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validarGravacao() throws Exception {
+        if (clienteInvalido()) return true;
+        if (invalido(ValidadorDataAbertura.validar(texto(data_abertura)))) {
+            session.queueNextField(data_abertura);
+            return true;
+        }
+        if (invalido(ValidadorSituacaoAtendimento.validar(texto(situacao)))) {
+            session.queueNextField(situacao);
+            return true;
+        }
+        if (invalido(ValidadorAssunto.validar(texto(assunto)))) {
+            session.queueNextField(assunto);
+            return true;
+        }
+        if (invalido(ValidadorDescricao.validar(texto(descricao)))) {
+            session.queueNextField(descricao);
+            return true;
+        }
+        return false;
+    }
+
+    BEFORE ADD
+    {
+        if (validarGravacao()) rejectOperation();
+    }
+
+    BEFORE UPDATE
+    {
+        if (validarGravacao()) rejectOperation();
+    }
+}

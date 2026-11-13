@@ -1,0 +1,22 @@
+Tenho um sistema legado desenvolvido em Unify NXJ e Java, responsável pelo cadastro de clientes e com integração a banco de dados.
+
+Quero que você realize a modernização completa desse sistema, migrando sua implementação para Java com Spring Boot.
+
+Siga as instruções:
+
+1. Analise todos os arquivos fornecidos antes de iniciar a implementação, identificando as funcionalidades, regras de negócio, validações e estruturas existentes.
+2. Migre todas as funcionalidades existentes para a nova arquitetura, preservando o comportamento original do sistema.
+3. Utilize Java com Spring Boot, organizando o projeto em camadas, como Controller, Service, Repository, Entity e DTO, conforme necessário.
+4. Implemente as operações de cadastro, consulta, atualização e exclusão de clientes, respeitando o que estiver implementado no sistema original.
+5. Preserve as regras de negócio e validações existentes, incluindo validação de telefone, e-mail, CPF e CNPJ, quando presentes.
+6. Mantenha a integração com o banco de dados, preservando os campos, tipos de dados, relacionamentos e restrições identificados no projeto original.
+7. Utilize boas práticas de desenvolvimento Java e Spring Boot, priorizando organização, legibilidade, reutilização de código e separação de responsabilidades.
+8. Crie testes automatizados para verificar as funcionalidades e regras de negócio migradas.
+9. Remova as dependências específicas do Unify NXJ que não sejam mais necessárias na nova arquitetura.
+10. Não adicione funcionalidades que não existam no sistema original, a menos que sejam indispensáveis para a modernização. Caso faça alguma alteração, justifique.
+11. Não invente informações sobre o sistema. Caso encontre dúvidas ou informações ausentes, identifique-as e informe as hipóteses adotadas.
+12. Forneça todos os arquivos necessários para executar o novo projeto, com seus respectivos caminhos e códigos completos.
+13. Ao finalizar, apresente um resumo das alterações realizadas, relacionando os componentes do sistema antigo aos novos componentes Spring Boot.
+
+**Importante:** O objetivo é modernizar o sistema existente, e não desenvolver outro sistema com funcionalidades diferentes. Priorize a preservação das funcionalidades e regras de negócio originais.
+Não desenvolva frontend React nesta etapa. O foco da migração é o backend com Spring Boot.
