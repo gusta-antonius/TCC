@@ -1,11 +1,8 @@
 package forms;
 
 import com.unify.nxj.mgr.datatypes.NullableString;
-import atendimento.ValidadorAssunto;
 import atendimento.ValidadorClienteAtendimento;
 import atendimento.ValidadorDataAbertura;
-import atendimento.ValidadorDescricao;
-import atendimento.ValidadorSituacaoAtendimento;
 
 FORM CadastroAtendimento
 {
@@ -31,7 +28,16 @@ FORM CadastroAtendimento
     {
         ON DATA ACCEPT
         {
-            if (invalido(ValidadorAssunto.validar(texto(assunto)))) rejectOperation();
+            String valor = texto(assunto);
+            if (valor.length() == 0) {
+                session.displayToMessageBox("Informe o assunto.");
+                rejectOperation();
+                return;
+            }
+            if (valor.length() > 60) {
+                session.displayToMessageBox("Assunto deve ter no máximo 60 caracteres.");
+                rejectOperation();
+            }
         }
     }
 
@@ -39,7 +45,10 @@ FORM CadastroAtendimento
     {
         ON DATA ACCEPT
         {
-            if (invalido(ValidadorDescricao.validar(texto(descricao)))) rejectOperation();
+            if (texto(descricao).length() > 200) {
+                session.displayToMessageBox("Descrição deve ter no máximo 200 caracteres.");
+                rejectOperation();
+            }
         }
     }
 
@@ -47,7 +56,16 @@ FORM CadastroAtendimento
     {
         ON DATA ACCEPT
         {
-            if (invalido(ValidadorSituacaoAtendimento.validar(texto(situacao)))) rejectOperation();
+            String valor = texto(situacao).toUpperCase();
+            if (valor.length() == 0) {
+                session.displayToMessageBox("Informe a situação: A (aberto) ou E (encerrado).");
+                rejectOperation();
+                return;
+            }
+            if ("A" != valor && "E" != valor) {
+                session.displayToMessageBox("Situação inválida. Use A (aberto) ou E (encerrado).");
+                rejectOperation();
+            }
         }
     }
 
@@ -89,15 +107,30 @@ FORM CadastroAtendimento
             session.queueNextField(data_abertura);
             return true;
         }
-        if (invalido(ValidadorSituacaoAtendimento.validar(texto(situacao)))) {
+        String sit = texto(situacao).toUpperCase();
+        if (sit.length() == 0) {
+            session.displayToMessageBox("Informe a situação: A (aberto) ou E (encerrado).");
             session.queueNextField(situacao);
             return true;
         }
-        if (invalido(ValidadorAssunto.validar(texto(assunto)))) {
+        if ("A" != sit && "E" != sit) {
+            session.displayToMessageBox("Situação inválida. Use A (aberto) ou E (encerrado).");
+            session.queueNextField(situacao);
+            return true;
+        }
+        String textoAssunto = texto(assunto);
+        if (textoAssunto.length() == 0) {
+            session.displayToMessageBox("Informe o assunto.");
             session.queueNextField(assunto);
             return true;
         }
-        if (invalido(ValidadorDescricao.validar(texto(descricao)))) {
+        if (textoAssunto.length() > 60) {
+            session.displayToMessageBox("Assunto deve ter no máximo 60 caracteres.");
+            session.queueNextField(assunto);
+            return true;
+        }
+        if (texto(descricao).length() > 200) {
+            session.displayToMessageBox("Descrição deve ter no máximo 200 caracteres.");
             session.queueNextField(descricao);
             return true;
         }

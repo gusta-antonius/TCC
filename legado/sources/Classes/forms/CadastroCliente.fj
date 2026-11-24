@@ -5,9 +5,7 @@ import cliente.ValidadorCep;
 import cliente.ValidadorDocumento;
 import cliente.ValidadorEmail;
 import cliente.ValidadorNome;
-import cliente.ValidadorSituacao;
 import cliente.ValidadorTelefone;
-import cliente.ValidadorTipoPessoa;
 import cliente.ValidadorUf;
 
 FORM CadastroCliente
@@ -24,15 +22,22 @@ FORM CadastroCliente
     {
         ON DATA ACCEPT
         {
-            if (invalido(ValidadorTipoPessoa.validar(texto(tipo_pessoa)))) {
+            String tipo = texto(tipo_pessoa).toUpperCase();
+            if (tipo.length() == 0) {
+                session.displayToMessageBox("Informe o tipo de pessoa: F (física) ou J (jurídica).");
                 rejectOperation();
                 return;
             }
-            if (invalido(ValidadorNome.revisar(texto(nome), texto(tipo_pessoa)))) {
+            if ("F" != tipo && "J" != tipo) {
+                session.displayToMessageBox("Tipo inválido. Use F (física) ou J (jurídica).");
+                rejectOperation();
+                return;
+            }
+            if (invalido(ValidadorNome.revisar(texto(nome), tipo))) {
                 session.queueNextField(nome);
                 return;
             }
-            if (invalido(ValidadorDocumento.revisar(texto(tipo_pessoa), texto(cpf_cnpj)))) {
+            if (invalido(ValidadorDocumento.revisar(tipo, texto(cpf_cnpj)))) {
                 session.queueNextField(cpf_cnpj);
             }
         }
@@ -50,7 +55,16 @@ FORM CadastroCliente
     {
         ON DATA ACCEPT
         {
-            if (invalido(ValidadorSituacao.validar(texto(situacao)))) rejectOperation();
+            String valor = texto(situacao).toUpperCase();
+            if (valor.length() == 0) {
+                session.displayToMessageBox("Informe a situação: A (ativo) ou I (inativo).");
+                rejectOperation();
+                return;
+            }
+            if ("A" != valor && "I" != valor) {
+                session.displayToMessageBox("Situação inválida. Use A (ativo) ou I (inativo).");
+                rejectOperation();
+            }
         }
     }
 
@@ -118,19 +132,33 @@ FORM CadastroCliente
     }
 
     private boolean validarGravacao() throws Exception {
-        if (invalido(ValidadorTipoPessoa.validar(texto(tipo_pessoa)))) {
+        String tipo = texto(tipo_pessoa).toUpperCase();
+        if (tipo.length() == 0) {
+            session.displayToMessageBox("Informe o tipo de pessoa: F (física) ou J (jurídica).");
             session.queueNextField(tipo_pessoa);
             return true;
         }
-        if (invalido(ValidadorNome.validar(texto(nome), texto(tipo_pessoa)))) {
+        if ("F" != tipo && "J" != tipo) {
+            session.displayToMessageBox("Tipo inválido. Use F (física) ou J (jurídica).");
+            session.queueNextField(tipo_pessoa);
+            return true;
+        }
+        if (invalido(ValidadorNome.validar(texto(nome), tipo))) {
             session.queueNextField(nome);
             return true;
         }
-        if (invalido(ValidadorDocumento.validar(texto(tipo_pessoa), texto(cpf_cnpj)))) {
+        if (invalido(ValidadorDocumento.validar(tipo, texto(cpf_cnpj)))) {
             session.queueNextField(cpf_cnpj);
             return true;
         }
-        if (invalido(ValidadorSituacao.validar(texto(situacao)))) {
+        String sit = texto(situacao).toUpperCase();
+        if (sit.length() == 0) {
+            session.displayToMessageBox("Informe a situação: A (ativo) ou I (inativo).");
+            session.queueNextField(situacao);
+            return true;
+        }
+        if ("A" != sit && "I" != sit) {
+            session.displayToMessageBox("Situação inválida. Use A (ativo) ou I (inativo).");
             session.queueNextField(situacao);
             return true;
         }

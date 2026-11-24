@@ -19,7 +19,7 @@ public final class ValidadorNome {
             return "Nome deve conter ao menos uma letra.";
         }
 
-        String codigo = ValidadorTipoPessoa.codigo(tipo);
+        String codigo = Texto.de(tipo).toUpperCase();
         if ("F".equals(codigo)) {
             return validarPessoaFisica(texto);
         }
