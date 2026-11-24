@@ -1,22 +1,30 @@
-Tenho um sistema legado desenvolvido em Unify NXJ e Java, respons�vel pelo cadastro de clientes e com integra��o a banco de dados.
+Tenho um sistema legado desenvolvido em Unify NXJ e Java, responsável pelo cadastro de clientes e chamados e com integração a banco de dados.
 
-Quero que voc� realize a moderniza��o completa desse sistema, migrando sua implementa��o para Java com Spring Boot.
+Quero que você realize a modernização completa desse sistema, migrando sua implementação para Java 25.0.5.0.3 com Spring Boot 4.2.0, utilizando banco de dados H2.
 
-Siga as instru��es:
+Siga as instruções:
 
-1. Analise todos os arquivos fornecidos antes de iniciar a implementa��o, identificando as funcionalidades, regras de neg�cio, valida��es e estruturas existentes.
-2. Migre todas as funcionalidades existentes para a nova arquitetura, preservando o comportamento original do sistema.
-3. Utilize Java com Spring Boot, organizando o projeto em camadas, como Controller, Service, Repository, Entity e DTO, conforme necess�rio.
-4. Implemente as opera��es de cadastro, consulta, atualiza��o e exclus�o de clientes, respeitando o que estiver implementado no sistema original.
-5. Preserve as regras de neg�cio e valida��es existentes, incluindo valida��o de telefone, e-mail, CPF e CNPJ, quando presentes.
-6. Mantenha a integra��o com o banco de dados, preservando os campos, tipos de dados, relacionamentos e restri��es identificados no projeto original.
-7. Utilize boas pr�ticas de desenvolvimento Java e Spring Boot, priorizando organiza��o, legibilidade, reutiliza��o de c�digo e separa��o de responsabilidades.
-8. Crie testes automatizados para verificar as funcionalidades e regras de neg�cio migradas.
-9. Remova as depend�ncias espec�ficas do Unify NXJ que n�o sejam mais necess�rias na nova arquitetura.
-10. N�o adicione funcionalidades que n�o existam no sistema original, a menos que sejam indispens�veis para a moderniza��o. Caso fa�a alguma altera��o, justifique.
-11. N�o invente informa��es sobre o sistema. Caso encontre d�vidas ou informa��es ausentes, identifique-as e informe as hip�teses adotadas.
-12. Forne�a todos os arquivos necess�rios para executar o novo projeto, com seus respectivos caminhos e c�digos completos.
-13. Ao finalizar, apresente um resumo das altera��es realizadas, relacionando os componentes do sistema antigo aos novos componentes Spring Boot.
+1. **Análise do sistema original:** Analise todos os arquivos fornecidos antes de iniciar a implementação, identificando as funcionalidades, regras de negócio, validações, estruturas existentes, campos, relacionamentos e integração com o banco de dados.
+2. **Preservação das funcionalidades:** Migre todas as funcionalidades existentes para a nova arquitetura, preservando o comportamento original do sistema. Não omita funcionalidades ou regras de negócio presentes no código legado.
+3. **Arquitetura:** Utilize Java com Spring Boot, organizando o projeto em camadas, como Controller, Service, Repository, Entity e DTO, conforme necessário. Mantenha uma separação adequada de responsabilidades.
+4. **Operações de cadastro:** Implemente as operações de cadastro, consulta, atualização e exclusão de clientes, respeitando o que estiver implementado no sistema original.
+5. **Regras de negócio e validações:** Preserve as regras de negócio e validações existentes, incluindo validação de telefone, e-mail, CPF e CNPJ, quando presentes. Não simplifique, remova ou altere regras existentes sem justificativa.
+6. **Banco de dados H2:** Utilize o banco de dados H2 como banco de dados da nova aplicação. Configure corretamente a conexão, o acesso aos dados e a persistência das informações. Utilize uma configuração adequada para que os dados permaneçam salvos após o encerramento da aplicação, preferencialmente utilizando o modo persistente em arquivo, e não apenas em memória.
+7. **Estrutura e persistência:** Mantenha os campos, tipos de dados, relacionamentos, restrições e comportamentos identificados no projeto original, adaptando-os ao H2 quando necessário. Caso alguma estrutura do banco original não seja diretamente compatível, faça a adaptação necessária e documente as diferenças.
+8. **Boas práticas:** Utilize boas práticas de desenvolvimento Java e Spring Boot, priorizando organização, legibilidade, reutilização de código, tratamento de exceções, separação de responsabilidades e segurança.
+9. **Testes automatizados:** Crie testes automatizados para verificar as funcionalidades e regras de negócio migradas, incluindo testes de persistência no H2, validações e operações CRUD, conforme aplicável.
+10. **Remoção de dependências legadas:** Remova as dependências específicas do Unify NXJ que não sejam mais necessárias na nova arquitetura, substituindo-as por recursos equivalentes do Spring Boot, quando aplicável.
+11. **Não adicionar funcionalidades:** Não adicione funcionalidades que não existam no sistema original, a menos que sejam indispensáveis para a modernização. Caso faça alguma alteração, justifique claramente.
+12. **Não inventar informações:** Não invente informações sobre o sistema. Caso encontre dúvidas, informações ausentes, regras ambíguas ou comportamentos que não possam ser identificados nos arquivos fornecidos, descreva-os e informe as hipóteses adotadas antes ou durante a implementação.
+13. **Projeto completo:** Forneça todos os arquivos necessários para executar o novo projeto, com seus respectivos caminhos e códigos completos. Inclua configurações do Maven ou Gradle, dependências, configuração do H2, entidades, repositories, services, controllers, DTOs, validações, testes e demais arquivos necessários.
+14. **Instruções de execução:** Forneça instruções claras para configurar e executar o projeto, incluindo os comandos necessários, acesso ao banco H2, localização do arquivo de banco persistente e, se habilitado, acesso ao console web do H2.
+15. **Mapeamento da modernização:** Ao finalizar, apresente um resumo das alterações realizadas, relacionando os componentes, arquivos e funcionalidades do sistema antigo aos novos componentes Spring Boot, explicando como cada parte foi migrada.
 
-**Importante:** O objetivo � modernizar o sistema existente, e n�o desenvolver outro sistema com funcionalidades diferentes. Priorize a preserva��o das funcionalidades e regras de neg�cio originais.
-N�o desenvolva frontend React nesta etapa. O foco da migra��o � o backend com Spring Boot.
+**Importante:**
+- O objetivo é modernizar o sistema existente, e não desenvolver outro sistema com funcionalidades diferentes.
+- Priorize a preservação das funcionalidades e regras de negócio originais.
+- Utilize H2 como banco de dados da nova aplicação.
+- Configure o H2 de forma persistente em arquivo, garantindo que os dados não sejam perdidos ao reiniciar a aplicação.
+- Não desenvolva frontend React nesta etapa. O foco da migração é o backend com Spring Boot.
+- Não descarte informações, regras ou comportamentos do sistema legado sem antes identificá-los e justificar a necessidade da alteração.
+- Caso não tenha certeza de alguma mudança, não altere e mande a dúvida no chat.
